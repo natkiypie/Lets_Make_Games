@@ -1,11 +1,13 @@
 #include "Game.hpp"
 
+SDL_Texture* playerTex;
+
 Game::Game()
 {}
 Game::~Game()
 {}
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+void Game::init(const char* title, int width, int height, bool fullscreen)
 {
   int flags = 0;
   if(fullscreen)
@@ -17,7 +19,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
   {
     std::cout << "Subsystems Initialized!..." << std::endl;
 
-    window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
     if(window)
     {
       std::cout << "Window created!" << std::endl;
@@ -35,6 +37,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
   } else {
     isRunning = false;
   }
+
+  SDL_Surface* tmpSurface = IMG_Load("../assets/player.png");
+  playerTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+  SDL_FreeSurface(tmpSurface);
 }
 
 void Game::handleEvents()
@@ -56,7 +62,7 @@ void Game::update()
 void Game::render()
 {
   SDL_RenderClear(renderer);
-  // this is where we would add stuff to render
+  SDL_RenderCopy(renderer, playerTex, NULL, NULL);
   SDL_RenderPresent(renderer);
 }
 
